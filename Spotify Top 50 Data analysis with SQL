@@ -1,0 +1,34 @@
+--Dataset: Spotify top 50 songs in 2019	
+--Source: Kaggle https://www.kaggle.com/datasets/leonardopena/top50spotify2019
+--Queried using: SQL Server	
+
+SELECT * FROM projects..spotify ;
+
+--What is the average danceability by artist?
+
+SELECT Artist_Name ,
+		ROUND(AVG(danceability),2) AS AvgDanceability
+		FROM projects..spotify
+		GROUP BY Artist_Name 
+		ORDER BY AvgDanceability DESC ;
+
+-- What is the number of Artists that appeared in the list(No duplicate artist)? 
+
+Select Count(DISTINCT Artist_Name)
+		FROM projects..spotify ;
+
+-- Display Unique Artist Names with their respective popularity and Track Name.
+
+Select DISTINCT Artist_Name  , Track_Name , Popularity
+		FROM projects..spotify ;
+
+--Displaying the Artist which appeared more than 1 times in the list.
+
+SELECT p.Track_Name , p.Artist_Name , p.Popularity
+		FROM projects..spotify p
+		JOIN ( SELECT t.Artist_Name
+           FROM projects..spotify t
+          GROUP BY t.Artist_Name
+         HAVING COUNT(1) > 1
+       ) d
+    ON d.Artist_Name = P.Artist_Name ;
